@@ -22,5 +22,11 @@ module.exports = Object.freeze({
   INTERNAL_SERVER_ERROR: 500,
 
 
+  LANGUAGES: [
+    "hindi",
+    "sindhi",
+    "punjabi",
+    "english",
+  ]
 
 });

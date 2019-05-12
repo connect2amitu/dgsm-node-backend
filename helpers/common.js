@@ -6,7 +6,6 @@ const async = require("async");
 const jwt = require('jsonwebtoken');
 const makeDir = require('make-dir');
 
-
 common_helper.sign = async (plainObject) => {
   try {
     var data = await jwt.sign(plainObject, config.SECRET_KEY, { expiresIn: config.EXPIRED_TIME })
@@ -14,6 +13,14 @@ common_helper.sign = async (plainObject) => {
   } catch (error) {
     return error;
   }
+};
+
+common_helper.slugify = (string) => {
+  return string
+    .trim()
+    .toLowerCase()
+    .replace(/[^\w ]+/g, '')
+    .replace(/ +/g, '-');
 };
 
 common_helper.count = async (model, condition = {}) => {
@@ -32,6 +39,8 @@ common_helper.insert = async (Model, newData) => {
     let data = await document.save();
     return { status: 1, message: "Data inserted", data };
   } catch (error) {
+    console.log('error  => ', error);
+
     return { status: 0, message: "No data inserted" };
   }
 };
@@ -140,15 +149,15 @@ common_helper.upload = async (files, dir, mimetype = "audio") => {
       if (files) {
         await makeDir(dir);
         let _files = [].concat(files);
+
         async.eachSeries(_files, async (file, next) => {
           if (constant.MIME_TYPES[mimetype].indexOf(file.mimetype) >= 0) {
             if (!fs.existsSync(dir)) {
               fs.mkdirSync(dir);
-            } else {
-              console.log("exist");
-
             }
+
             var filename = "";
+
             try {
               filename =
                 file.name.split(".")[0].replace(/\s/g, "_") + new Date().getTime() + "." + file.name.split(".").pop();

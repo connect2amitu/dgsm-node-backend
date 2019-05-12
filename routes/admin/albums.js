@@ -48,7 +48,11 @@ router.get("/:id", async (req, res) => {
 router.post("/", album.album, validation_response, async (req, res) => {
   let saveData = {
     name: req.body.name,
+    language: req.body.language,
+    slug: common_helper.slugify(req.body.name)
   };
+
+
   let responseData = await common_helper.insert(Album, saveData);
   if (responseData.status === 1) {
     res.status(config.OK_STATUS).json(responseData);
@@ -60,6 +64,7 @@ router.post("/", album.album, validation_response, async (req, res) => {
 router.put("/:id", album.album, validation_response, async (req, res) => {
   let updateData = {
     name: req.body.name,
+    slug: funs.slugify(req.body.name),
     modifiedAt: Date.now()
   };
   let condition = {
