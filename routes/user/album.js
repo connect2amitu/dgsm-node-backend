@@ -20,17 +20,13 @@ router.post("/filter", async (req, res) => {
 
 
 router.get("/", async (req, res) => {
-  console.log('1  => ', 1);
-
   let condition = {};
 
-  if (req.query.lang) {
-    condition.language = req.query.lang;
+  if (req.query.language) {
+    condition.language = req.query.language;
   }
 
   let responseData = await common_helper.find(Album, condition);
-  console.log('responseData  => ', responseData);
-
   if (responseData.status === 1) {
     res.status(config.OK_STATUS).json(responseData);
   } else {

@@ -2,12 +2,11 @@ const express = require("express");
 const router = express.Router();
 
 
-const user = require("./user/user");
 const album = require("./user/album");
+const playlist = require("./user/playlist");
 
-
-router.use("/", user);
 router.use("/album", album);
+router.use("/playlist", playlist);
 
 
 module.exports = router;
