@@ -77,7 +77,7 @@ router.put("/:id", album.album, validation_response, async (req, res) => {
     name: req.body.name,
     type: req.body.type,
     language: req.body.language,
-    slug: funs.slugify(req.body.name),
+    slug: common_helper.slugify(req.body.name),
     modifiedAt: Date.now()
   };
   let condition = {
