@@ -3,7 +3,7 @@ const collectionName = "tracks_urls";
 
 const collectionSchema = {
   url: { type: String, require: true },
-  trackId: { type: constant.OBJECT_ID, ref: "tracks", default: null },
+  albumId: { type: constant.OBJECT_ID, ref: "albums", default: null },
   trackName: { type: String, default: null },
   isDeleted: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now },

@@ -11,22 +11,13 @@ track_helper.getPlayList = async (condition = {}, isMany = false) => {
       {
         $lookup:
         {
-          from: 'tracks',
+          from: 'tracks_urls',
           localField: '_id',
           foreignField: 'albumId',
-          as: 'tracks'
-        }
-      },
-      { $unwind: '$tracks' },
-      {
-        $lookup:
-        {
-          from: 'tracks_urls',
-          localField: 'tracks._id',
-          foreignField: 'trackId',
           as: 'tracks_url'
         }
-      }]
+      }
+    ]
 
     let data = await Albums.aggregate(aggregate);
     if (isMany == false) {

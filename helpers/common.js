@@ -146,36 +146,27 @@ common_helper.upload = async (files, dir, mimetype = "audio") => {
   var promise = new Promise(async function (resolve, reject) {
     var file_path_list = [];
     try {
-      if (files) {
-        await makeDir(dir);
-        let _files = [].concat(files);
-
+      let _files = [].concat(files);
+      if (_files.length > 0) {
+        makeDir(dir);
         async.eachSeries(_files, async (file, next) => {
           if (constant.MIME_TYPES[mimetype].indexOf(file.mimetype) >= 0) {
             if (!fs.existsSync(dir)) {
               fs.mkdirSync(dir);
             }
-
             var filename = "";
-
             try {
               filename =
                 file.name.split(".")[0].replace(/\s/g, "_") + new Date().getTime() + "." + file.name.split(".").pop();
             } catch (error) {
               filename = name + new Date().getTime() + "." + file.name.split(".").pop();
             }
+            location = dir + "/" + filename
+            file_path_list.push({
+              name: file.name,
+              path: location
+            });
             file.mv(dir + "/" + filename, err => {
-              if (err) {
-                console.log("err", err);
-
-              } else {
-                location = dir + "/" + filename;
-                file_path_list.push({
-                  // name: file.name.split(".").slice(0, -1).join("."),
-                  name: file.name,
-                  path: location
-                });
-              }
             });
           } else {
             next();

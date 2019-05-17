@@ -67,28 +67,21 @@ router.post("/", tracks.tracks, validation_response, async (req, res) => {
   }
 
   let uploadPromise = await common_helper.upload(req.files['track'], folderName, "audio");
-  let responseData = await common_helper.insert(Track, saveData);
+  let saveURLs = [];
+  uploadPromise.data.forEach(uploaded => {
+    saveURLs.push({
+      trackName: uploaded.name,
+      url: uploaded.path,
+      albumId: req.body.albumId
+    })
+  });
 
-  if (responseData.status === 1) {
-    let trackId = responseData.data._id;
-    let saveURLs = [];
-    uploadPromise.data.forEach(uploaded => {
-      saveURLs.push({
-        trackName: uploaded.name,
-        url: uploaded.path,
-        trackId
-      })
-    });
+  let trackURLData = await common_helper.insertMany(TracksUrls, saveURLs);
 
-    let trackURLData = await common_helper.insertMany(TracksUrls, saveURLs);
-
-    if (trackURLData.status === 1) {
-      res.status(config.OK_STATUS).json(responseData);
-    } else {
-      res.status(config.DATABASE_ERROR_STATUS).json(responseData);
-    }
+  if (trackURLData.status === 1) {
+    res.status(config.OK_STATUS).json(trackURLData);
   } else {
-    res.status(config.DATABASE_ERROR_STATUS).json(responseData);
+    res.status(config.DATABASE_ERROR_STATUS).json(trackURLData);
   }
 });
 

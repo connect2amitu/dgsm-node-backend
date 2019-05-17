@@ -51,14 +51,31 @@ router.post("/", album.album, validation_response, async (req, res) => {
     language: req.body.language,
     slug: common_helper.slugify(req.body.name)
   };
+  console.log('req.files  => ', req.files);
 
+  try {
+    let image = await common_helper.upload(req.files['cover'], "uploads/albums", "image");
+    if (image.status === 1 && image.data.length > 0) {
+      console.log('image.data[0]  => ', image.data[0]);
 
-  let responseData = await common_helper.insert(Album, saveData);
-  if (responseData.status === 1) {
-    res.status(config.OK_STATUS).json(responseData);
-  } else {
-    res.status(config.DATABASE_ERROR_STATUS).json(responseData);
+      saveData.cover = image.data[0].path;
+    } else {
+      saveData.cover = "no image";
+    }
+    console.log('saveData  => ', saveData);
+
+    let responseData = await common_helper.insert(Album, saveData);
+    if (responseData.status === 1) {
+      res.status(config.OK_STATUS).json(responseData);
+    } else {
+      res.status(config.DATABASE_ERROR_STATUS).json(responseData);
+    }
+
+  } catch (error) {
+    console.log('error  => ', error);
   }
+
+
 });
 
 router.put("/:id", album.album, validation_response, async (req, res) => {
