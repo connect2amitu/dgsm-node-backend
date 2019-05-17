@@ -49,21 +49,15 @@ router.post("/", album.album, validation_response, async (req, res) => {
   let saveData = {
     name: req.body.name,
     language: req.body.language,
+    type: req.body.type,
     slug: common_helper.slugify(req.body.name)
   };
-  console.log('req.files  => ', req.files);
 
   try {
     let image = await common_helper.upload(req.files['cover'], "uploads/albums", "image");
     if (image.status === 1 && image.data.length > 0) {
-      console.log('image.data[0]  => ', image.data[0]);
-
       saveData.cover = image.data[0].path;
-    } else {
-      saveData.cover = "no image";
     }
-    console.log('saveData  => ', saveData);
-
     let responseData = await common_helper.insert(Album, saveData);
     if (responseData.status === 1) {
       res.status(config.OK_STATUS).json(responseData);
@@ -81,12 +75,15 @@ router.post("/", album.album, validation_response, async (req, res) => {
 router.put("/:id", album.album, validation_response, async (req, res) => {
   let updateData = {
     name: req.body.name,
+    type: req.body.type,
+    language: req.body.language,
     slug: funs.slugify(req.body.name),
     modifiedAt: Date.now()
   };
   let condition = {
     _id: req.params.id
   };
+
   let responseData = await common_helper.update(Album, condition, updateData);
   if (responseData.status === 1) {
     res.status(config.OK_STATUS).json(responseData);
