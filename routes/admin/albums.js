@@ -58,6 +58,8 @@ router.post("/", album.album, validation_response, async (req, res) => {
     if (image.status === 1 && image.data.length > 0) {
       saveData.cover = image.data[0].path;
     }
+    console.log('saveData  => ', saveData);
+
     let responseData = await common_helper.insert(Album, saveData);
     if (responseData.status === 1) {
       res.status(config.OK_STATUS).json(responseData);
@@ -83,13 +85,24 @@ router.put("/:id", album.album, validation_response, async (req, res) => {
   let condition = {
     _id: req.params.id
   };
+  try {
+    let image = await common_helper.upload(req.files['cover'], "uploads/albums", "image");
 
-  let responseData = await common_helper.update(Album, condition, updateData);
-  if (responseData.status === 1) {
-    res.status(config.OK_STATUS).json(responseData);
-  } else {
-    res.status(config.DATABASE_ERROR_STATUS).json(responseData);
+    if (image.status === 1 && image.data.length > 0) {
+      updateData.cover = image.data[0].path;
+    }
+
+    let responseData = await common_helper.update(Album, condition, updateData);
+
+    if (responseData.status === 1) {
+      res.status(config.OK_STATUS).json(responseData);
+    } else {
+      res.status(config.DATABASE_ERROR_STATUS).json(responseData);
+    }
+  } catch (error) {
+    console.log('error  => ', error);
   }
+
 });
 
 router.delete("/:id", async (req, res) => {
