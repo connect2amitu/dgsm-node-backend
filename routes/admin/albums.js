@@ -68,39 +68,44 @@ router.post("/", album.album, validation_response, async (req, res) => {
     }
 
   } catch (error) {
-    console.log('error  => ', error);
+    res.status(config.INTERNAL_SERVER_ERROR).json(error);
   }
-
-
 });
 
 router.put("/:id", album.album, validation_response, async (req, res) => {
-  let updateData = {
+  let saveData = {
     name: req.body.name,
     type: req.body.type,
     language: req.body.language,
     slug: common_helper.slugify(req.body.name),
     modifiedAt: Date.now()
   };
-  let condition = {
+  var condition = {
     _id: req.params.id
   };
   try {
     let image = await common_helper.upload(req.files['cover'], "uploads/albums", "image");
-
-    if (image.status === 1 && image.data.length > 0) {
-      updateData.cover = image.data[0].path;
+    console.info('req.files => ', req.files);
+    if (req.files) {
+      let image = await common_helper.upload(req.files['cover'], "uploads/albums", "image");
+      if (image.status === 1 && image.data.length > 0) {
+        saveData.cover = image.data[0].path;
+      }
     }
 
-    let responseData = await common_helper.update(Album, condition, updateData);
+    let responseData = await common_helper.update(Album, condition, saveData);
+    console.info('------------------------------------');
+    console.info('responseData => ', responseData);
+    console.info('------------------------------------');
 
     if (responseData.status === 1) {
       res.status(config.OK_STATUS).json(responseData);
     } else {
       res.status(config.DATABASE_ERROR_STATUS).json(responseData);
     }
-  } catch (error) {
-    console.log('error  => ', error);
+  }
+  catch (error) {
+    res.status(config.INTERNAL_SERVER_ERROR).json(error);
   }
 
 });
