@@ -84,8 +84,6 @@ router.put("/:id", album.album, validation_response, async (req, res) => {
     _id: req.params.id
   };
   try {
-    let image = await common_helper.upload(req.files['cover'], "uploads/albums", "image");
-    console.info('req.files => ', req.files);
     if (req.files) {
       let image = await common_helper.upload(req.files['cover'], "uploads/albums", "image");
       if (image.status === 1 && image.data.length > 0) {
