@@ -21,12 +21,14 @@ router.post("/filter", async (req, res) => {
 
 router.get("/", async (req, res) => {
   let condition = {};
-
   if (req.query.language) {
     condition.language = req.query.language;
   }
   if (req.query.search) {
-    condition.name = new RegExp("/^" + req.query.search + "/i");
+    re = new RegExp(`^${req.query.search}`, "i");
+    condition.name = {
+      $regex: re
+    }
   }
 
   let responseData = await common_helper.find(Album, condition);
