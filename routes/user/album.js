@@ -21,7 +21,6 @@ router.post("/filter", async (req, res) => {
 
 router.get("/", async (req, res) => {
   let condition = {};
-
   if (req.query.language) {
     condition.language = req.query.language;
   }
