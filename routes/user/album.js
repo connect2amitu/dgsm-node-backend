@@ -26,10 +26,11 @@ router.get("/", async (req, res) => {
     condition.language = req.query.language;
   }
   if (req.query.search) {
-    condition.name = new RegExp("/^" + req.query.search + "/i");
+    condition.name = new RegExp(`^${req.query.search}`, 'i');
   }
 
   let responseData = await common_helper.find(Album, condition);
+
   if (responseData.status === 1) {
     res.status(config.OK_STATUS).json(responseData);
   } else {

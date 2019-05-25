@@ -19,6 +19,8 @@ track_helper.getPlayList = async (condition = {}, isMany = false) => {
       }
     ]
 
+
+
     let data = await Albums.aggregate(aggregate);
     if (isMany == false) {
       data = data[0];

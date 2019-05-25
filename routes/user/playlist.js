@@ -9,7 +9,6 @@ router.get("/:slug", async (req, res) => {
   let condition = {
     slug: req.params.slug
   };
-  console.log('condition  => ', condition);
 
   let responseData = await playlist_helper.getPlayList(condition);
 
