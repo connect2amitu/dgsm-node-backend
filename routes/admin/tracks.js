@@ -66,22 +66,27 @@ router.post("/", tracks.tracks, validation_response, async (req, res) => {
     folderName += "/" + albumName.data.name;
   }
 
-  let uploadPromise = await common_helper.upload(req.files['track'], folderName, "audio");
-  let saveURLs = [];
-  uploadPromise.data.forEach(uploaded => {
-    saveURLs.push({
-      trackName: uploaded.name,
-      url: uploaded.path,
-      albumId: req.body.albumId
-    })
-  });
+  try {
+    let uploadPromise = await common_helper.upload(req.files['track'], folderName, "audio");
+    let saveURLs = [];
+    uploadPromise.data.forEach(uploaded => {
+      saveURLs.push({
+        trackName: uploaded.name,
+        url: uploaded.path,
+        albumId: req.body.albumId
+      })
+    });
 
-  let trackURLData = await common_helper.insertMany(TracksUrls, saveURLs);
+    let trackURLData = await common_helper.insertMany(TracksUrls, saveURLs);
 
-  if (trackURLData.status === 1) {
-    res.status(config.OK_STATUS).json(trackURLData);
-  } else {
-    res.status(config.DATABASE_ERROR_STATUS).json(trackURLData);
+    if (trackURLData.status === 1) {
+      res.status(config.OK_STATUS).json(trackURLData);
+    } else {
+      res.status(config.DATABASE_ERROR_STATUS).json(trackURLData);
+    }
+  } catch (error) {
+    res.status(config.INTERNAL_SERVER_ERROR).json(uploadPromise);
+
   }
 });
 

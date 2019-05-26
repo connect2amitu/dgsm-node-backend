@@ -148,7 +148,7 @@ common_helper.upload = async (files, dir, mimetype = "audio") => {
     try {
       let _files = [].concat(files);
       if (_files.length > 0) {
-        makeDir(dir);
+        await makeDir(dir);
         async.eachSeries(_files, async (file, next) => {
           if (constant.MIME_TYPES[mimetype].indexOf(file.mimetype) >= 0) {
             if (!fs.existsSync(dir)) {
@@ -178,6 +178,8 @@ common_helper.upload = async (files, dir, mimetype = "audio") => {
         reject({ status: 0, message: "No file(s) selected" });
       }
     } catch (error) {
+      console.log('error  => ', error);
+
       reject({ status: 0, message: "No file(s) selected" });
     }
   });
