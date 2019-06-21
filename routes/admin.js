@@ -4,6 +4,7 @@ const router = express.Router();
 const auth = require("../middleware/auth");
 
 const track = require("./admin/tracks");
+const playlist = require("./admin/playlist");
 const video = require("./admin/videos");
 const image = require("./admin/images");
 const quote = require("./admin/quotes");
@@ -12,6 +13,7 @@ const sub_categories = require("./admin/sub_categories");
 const albums = require("./admin/albums");
 
 router.use("/track", auth, track);
+router.use("/playlist", auth, playlist);
 router.use("/video", auth, video);
 router.use("/image", auth, image);
 router.use("/quote", auth, quote);

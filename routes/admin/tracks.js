@@ -121,19 +121,15 @@ router.put("/:id", tracks.tracks, validation_response, async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
   let condition = {
-    _id: req.params.id
-  };
-  let responseData = await common_helper.delete(Track, condition);
-
-  if (responseData.status === 1) {
-    let condition = {
-      trackId: constant.OBJECT_ID(req.params.id)
-    }
-    await common_helper.delete(TracksUrls, condition);
+    _id: constant.OBJECT_ID(req.params.id)
+  }
+  try {
+    var responseData = await common_helper.delete(TracksUrls, condition);
     res.status(config.OK_STATUS).json(responseData);
-  } else {
+  } catch (error) {
     res.status(config.DATABASE_ERROR_STATUS).json(responseData);
   }
+
 
 });
 
