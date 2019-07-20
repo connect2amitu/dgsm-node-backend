@@ -97,6 +97,18 @@ common_helper.findOne = async (model, condition = {}) => {
     return { status: 0, message: "No data found" };
   }
 };
+common_helper.removeFileFromServer = async (path) => {
+  console.info('------------------------------------');
+  console.info(`path => `, path);
+  console.info('------------------------------------');
+
+  try {
+    fs.unlinkSync(path)
+    return { status: 1, message: "File deleted" };
+  } catch (error) {
+    return { status: 0, message: "File not deleted", error };
+  }
+};
 
 
 common_helper.changeObject = function (data, callback) {
@@ -157,9 +169,9 @@ common_helper.upload = async (files, dir, mimetype = "audio") => {
             var filename = "";
             try {
               filename =
-                file.name.split(".")[0].replace(/\s/g, "_") + new Date().getTime() + "." + file.name.split(".").pop();
+                file.name.split(".")[0].replace(/\s/g, "_") + "_" + new Date().getTime() + "." + file.name.split(".").pop();
             } catch (error) {
-              filename = name + new Date().getTime() + "." + file.name.split(".").pop();
+              filename = name + "_" + new Date().getTime() + "." + file.name.split(".").pop();
             }
             location = dir + "/" + filename
             file_path_list.push({

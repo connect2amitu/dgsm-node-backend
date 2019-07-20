@@ -71,11 +71,15 @@ router.post("/", tracks.tracks, validation_response, async (req, res) => {
     let saveURLs = [];
     uploadPromise.data.forEach(uploaded => {
       saveURLs.push({
-        trackName: uploaded.name,
+        trackName: uploaded.name.substring(0, uploaded.name.indexOf('.')),
         url: uploaded.path,
         albumId: req.body.albumId
       })
     });
+
+    console.info('------------------------------------');
+    console.info(`saveURLs => `, saveURLs);
+    console.info('------------------------------------');
 
     let trackURLData = await common_helper.insertMany(TracksUrls, saveURLs);
 
@@ -125,12 +129,11 @@ router.delete("/:id", async (req, res) => {
   }
   try {
     var responseData = await common_helper.delete(TracksUrls, condition);
+    await common_helper.removeFileFromServer(responseData.data.url);
     res.status(config.OK_STATUS).json(responseData);
   } catch (error) {
     res.status(config.DATABASE_ERROR_STATUS).json(responseData);
   }
-
-
 });
 
 module.exports = router;

@@ -38,6 +38,7 @@ router.get("/:id", async (req, res) => {
     _id: req.params.id
   };
   let responseData = await common_helper.findOne(Album, condition);
+
   if (responseData.status === 1) {
     res.status(config.OK_STATUS).json(responseData);
   } else {
@@ -55,12 +56,13 @@ router.post("/", album.album, validation_response, async (req, res) => {
 
   try {
     let image = await common_helper.upload(req.files['cover'], "uploads/albums", "image");
+
     if (image.status === 1 && image.data.length > 0) {
       saveData.cover = image.data[0].path;
     }
-    console.log('saveData  => ', saveData);
 
     let responseData = await common_helper.insert(Album, saveData);
+
     if (responseData.status === 1) {
       res.status(config.OK_STATUS).json(responseData);
     } else {
@@ -83,6 +85,7 @@ router.put("/:id", album.album, validation_response, async (req, res) => {
   var condition = {
     _id: req.params.id
   };
+
   try {
     if (req.files) {
       let image = await common_helper.upload(req.files['cover'], "uploads/albums", "image");
@@ -92,9 +95,6 @@ router.put("/:id", album.album, validation_response, async (req, res) => {
     }
 
     let responseData = await common_helper.update(Album, condition, saveData);
-    console.info('------------------------------------');
-    console.info('responseData => ', responseData);
-    console.info('------------------------------------');
 
     if (responseData.status === 1) {
       res.status(config.OK_STATUS).json(responseData);
@@ -113,6 +113,7 @@ router.delete("/:id", async (req, res) => {
     _id: req.params.id
   };
   let responseData = await common_helper.delete(Album, condition);
+
   if (responseData.status === 1) {
     res.status(config.OK_STATUS).json(responseData);
   } else {
