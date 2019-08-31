@@ -98,10 +98,6 @@ common_helper.findOne = async (model, condition = {}) => {
   }
 };
 common_helper.removeFileFromServer = async (path) => {
-  console.info('------------------------------------');
-  console.info(`path => `, path);
-  console.info('------------------------------------');
-
   try {
     fs.unlinkSync(path)
     return { status: 1, message: "File deleted" };

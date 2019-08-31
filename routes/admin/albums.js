@@ -51,8 +51,15 @@ router.post("/", album.album, validation_response, async (req, res) => {
     name: req.body.name,
     language: req.body.language,
     type: req.body.type,
-    slug: common_helper.slugify(req.body.name)
+    slug: `${common_helper.slugify(req.body.name)}-${req.body.type}`
   };
+  let responseData = await common_helper.find(Album, { slug: saveData.slug });
+
+  if (responseData.status === 1 && responseData.data.length > 0) {
+    responseData.status = 0;
+    responseData.message = "Album already Exists";
+    return res.status(config.OK_STATUS).json(responseData);
+  }
 
   try {
     let image = await common_helper.upload(req.files['cover'], "uploads/albums", "image");

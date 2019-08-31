@@ -59,11 +59,11 @@ router.post("/", tracks.tracks, validation_response, async (req, res) => {
     type: req.body.type,
   };
 
-  let albumName = await common_helper.findOne(Category, condition = { _id: req.body.categoryId });
+  let category = await common_helper.findOne(Category, condition = { _id: req.body.categoryId });
   let folderName = "uploads/tracks/" + req.body.type;
 
-  if (albumName.status === 1) {
-    folderName += "/" + albumName.data.name;
+  if (category.status === 1) {
+    folderName += "/" + category.data.name;
   }
 
   try {
@@ -73,6 +73,7 @@ router.post("/", tracks.tracks, validation_response, async (req, res) => {
       saveURLs.push({
         trackName: uploaded.name.substring(0, uploaded.name.indexOf('.')),
         url: uploaded.path,
+        categoryId: req.body.categoryId,
         albumId: req.body.albumId
       })
     });
