@@ -4,9 +4,7 @@ const album_helper = {}
 album_helper.getFilteredRecords = async filterObj => {
     skip = filterObj.pageSize * filterObj.page;
     try {
-        var searchedRecordCount = await Albums.aggregate([{
-            $match: filterObj.columnFilter
-        }]);
+        var searchedRecordCount = await Albums.countDocuments(filterObj.columnFilter);
 
         var filteredData = await Albums.aggregate([{
             $match: filterObj.columnFilter
@@ -24,9 +22,9 @@ album_helper.getFilteredRecords = async filterObj => {
 
         return {
             status: 1, message: "Data found",
-            count: searchedRecordCount.length,
+            count: searchedRecordCount,
             totalPages: Math.ceil(
-                searchedRecordCount.length / filterObj.pageSize
+                searchedRecordCount / filterObj.pageSize
             ),
             data: filteredData
         };

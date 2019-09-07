@@ -78,10 +78,6 @@ router.post("/", tracks.tracks, validation_response, async (req, res) => {
       })
     });
 
-    console.info('------------------------------------');
-    console.info(`saveURLs => `, saveURLs);
-    console.info('------------------------------------');
-
     let trackURLData = await common_helper.insertMany(TracksUrls, saveURLs);
 
     if (trackURLData.status === 1) {

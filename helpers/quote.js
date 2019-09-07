@@ -4,9 +4,7 @@ const quote_helper = {}
 quote_helper.getFilteredRecords = async (filterObj) => {
     skip = filterObj.pageSize * filterObj.page;
     try {
-        var searchedRecordCount = await Quotes.aggregate([{
-            $match: filterObj.columnFilter
-        }]);
+        var searchedRecordCount = await Quotes.countDocuments(filterObj.columnFilter);
         var filteredData = await Quotes.aggregate([
             {
                 $lookup: {
@@ -33,13 +31,12 @@ quote_helper.getFilteredRecords = async (filterObj) => {
             },
         ]);
 
-        let recordCount = searchedRecordCount.length;
         return {
             status: 1,
             message: "Data found",
             data: {
-                count: recordCount,
-                totalPages: Math.ceil(recordCount / filterObj.pageSize),
+                count: searchedRecordCount,
+                totalPages: Math.ceil(searchedRecordCount / filterObj.pageSize),
                 data: filteredData
             }
         };

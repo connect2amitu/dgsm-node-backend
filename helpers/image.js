@@ -51,9 +51,7 @@ image_helper.getImagesData = async (condition = {}, isMany = false) => {
 image_helper.getFilteredRecords = async filterObj => {
     skip = filterObj.pageSize * filterObj.page;
     try {
-        var searchedRecordCount = await Image.aggregate([{
-            $match: filterObj.columnFilter
-        }]);
+        var searchedRecordCount = await Image.countDocuments(filterObj.columnFilter);
         var filteredData = await Image.aggregate([
             {
                 $lookup: {
@@ -99,13 +97,12 @@ image_helper.getFilteredRecords = async filterObj => {
             },
         ]);
 
-        let recordCount = searchedRecordCount.length;
         return {
             status: 1,
             message: "Data found",
             data: {
-                count: recordCount,
-                totalPages: Math.ceil(recordCount / filterObj.pageSize),
+                count: searchedRecordCount,
+                totalPages: Math.ceil(searchedRecordCount / filterObj.pageSize),
                 data: filteredData
             }
         };

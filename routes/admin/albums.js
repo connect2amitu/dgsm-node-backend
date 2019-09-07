@@ -4,6 +4,7 @@ const common_helper = require("../../helpers/common");
 const album_helper = require("../../helpers/album");
 const Album = require("../../models/albums");
 const config = require("../../config");
+const constants = require("../../constants");
 const album = require('../../validators/album');
 const validation_response = require('../../validators/validation_response');
 
@@ -57,7 +58,7 @@ router.post("/", album.album, validation_response, async (req, res) => {
 
   if (responseData.status === 1 && responseData.data.length > 0) {
     responseData.status = 0;
-    responseData.message = "Album already Exists";
+    responseData.message = `${saveData.slug} album already exists `;
     return res.status(config.OK_STATUS).json(responseData);
   }
 
@@ -75,7 +76,6 @@ router.post("/", album.album, validation_response, async (req, res) => {
     } else {
       res.status(config.DATABASE_ERROR_STATUS).json(responseData);
     }
-
   } catch (error) {
     res.status(config.INTERNAL_SERVER_ERROR).json(error);
   }
@@ -86,13 +86,19 @@ router.put("/:id", album.album, validation_response, async (req, res) => {
     name: req.body.name,
     type: req.body.type,
     language: req.body.language,
-    slug: common_helper.slugify(req.body.name),
+    slug: `${common_helper.slugify(req.body.name)}-${req.body.type}`,
     modifiedAt: Date.now()
   };
   var condition = {
     _id: req.params.id
   };
+  let responseData = await common_helper.find(Album, { slug: saveData.slug, _id: { $ne: constants.OBJECT_ID(req.params.id) } });
 
+  if (responseData.status === 1 && responseData.data.length > 0) {
+    responseData.status = 0;
+    responseData.message = `${saveData.slug} album already exists `;
+    return res.status(config.OK_STATUS).json(responseData);
+  }
   try {
     if (req.files) {
       let image = await common_helper.upload(req.files['cover'], "uploads/albums", "image");

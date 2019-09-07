@@ -55,6 +55,10 @@ common_helper.insertMany = async (Model, newData) => {
 };
 
 common_helper.update = async (model, condition, newData) => {
+  console.info('------------------------------------');
+  console.info(`newData => `, newData);
+  console.info('------------------------------------');
+
   try {
     let data = await model.findOneAndUpdate(condition, newData, { new: true });
     return { status: 1, message: "Data updated", data };

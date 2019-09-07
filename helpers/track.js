@@ -51,9 +51,7 @@ track_helper.getTracksData = async (condition = {}, isMany = false) => {
 track_helper.getFilteredRecords = async filterObj => {
   skip = filterObj.pageSize * filterObj.page;
   try {
-    var searchedRecordCount = await Track.aggregate([{
-      $match: filterObj.columnFilter
-    }]);
+    var searchedRecordCount = await Track.countDocuments(filterObj.columnFilter);
     var filteredData = await Track.aggregate([
       {
         $lookup: {
@@ -99,13 +97,12 @@ track_helper.getFilteredRecords = async filterObj => {
       },
     ]);
 
-    let recordCount = searchedRecordCount.length;
     return {
       status: 1,
       message: "Data found",
       data: {
-        count: recordCount,
-        totalPages: Math.ceil(recordCount / filterObj.pageSize),
+        count: searchedRecordCount,
+        totalPages: Math.ceil(searchedRecordCount / filterObj.pageSize),
         data: filteredData
       }
     };
