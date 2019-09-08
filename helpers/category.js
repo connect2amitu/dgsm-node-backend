@@ -40,19 +40,35 @@ category_helper.getFilteredRecords = async filterObj => {
 
 category_helper.getCategoryTracks = async condition => {
     try {
-        var filteredData = await Category.aggregate([
-            {
-                $match: condition
-            },
-            {
-                $lookup: {
-                    from: "tracks_urls",
-                    foreignField: "categoryId",
-                    localField: "_id",
-                    as: "tracks_url"
-                }
-            }
-        ]);
+      var filteredData = await Category.aggregate([
+        {
+          $match: condition
+        },
+        {
+          $lookup:
+          {
+            from: 'tracks_urls',
+            localField: '_id',
+            foreignField: 'categoryId',
+            as: 'tracks_url'
+          }
+        },
+        {
+          $unwind: "$tracks_url"
+        },
+        { $addFields: { "tracks_url.categoryName": "$name" } },
+        {
+          $group: {
+            _id: "$_id",
+            cover: { $first: "$cover" },
+            createdAt: { $first: "$createdAt" },
+            modifiedAt: { $first: "$modifiedAt" },
+            name: { $first: "$name" },
+            slug: { $first: "$slug" },
+            tracks_url: { $addToSet: "$tracks_url" }
+          }
+        }
+      ]);
 
         return {
             status: 1, message: "Data found",
