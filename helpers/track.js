@@ -38,8 +38,10 @@ track_helper.getTracksData = async (condition = {}, isMany = false) => {
         }
       },
     ]);
-    if (!isMany == false) {
+    if (!isMany == false && typeof data[0] !== "undefined") {
       data = data[0];
+    } else {
+      throw false
     }
     return { status: 1, message: "Data found", data };
   } catch (error) {

@@ -64,8 +64,10 @@ track_helper.getPlayList = async (condition = {}, isMany = false) => {
     // ]
 
     let data = await Albums.aggregate(aggregate);
-    if (isMany == false) {
+    if (isMany == false && typeof data[0] !== "undefined") {
       data = data[0];
+    } else {
+      throw false
     }
     return { status: 1, message: "Data found", data };
   } catch (error) {
