@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const common_helper = require("../../helpers/common");
-const category_helper = require("../../helpers/category");
+const bhajan_helper = require("../../helpers/bhajan");
 const Category = require("../../models/categories");
 const config = require("../../config");
 
@@ -20,7 +20,7 @@ router.get("/:slug", async (req, res) => {
   var condition = {
     slug: req.params.slug
   }
-  let responseData = await category_helper.getCategoryTracks(condition);
+  let responseData = await bhajan_helper.getCategoryTracks(condition);
   if (responseData.status === 1) {
     res.status(config.OK_STATUS).json(responseData);
   } else {

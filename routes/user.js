@@ -3,11 +3,11 @@ const router = express.Router();
 
 
 const album = require("./user/album");
-const category = require("./user/category");
+const bhajan = require("./user/bhajan");
 const playlist = require("./user/playlist");
 
 router.use("/album", album);
-router.use("/category", category);
+router.use("/bhajan", bhajan);
 router.use("/playlist", playlist);
 
 
