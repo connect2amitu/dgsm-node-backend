@@ -96,7 +96,14 @@ common_helper.find = async (model, condition = { isDeleted: 0 }) => {
 common_helper.findOne = async (model, condition = {}) => {
   try {
     let data = await model.findOne(condition).lean();
-    return { status: 1, message: "Data found", data };
+    console.info('------------------------------------');
+    console.info(`data => `, data);
+    console.info('------------------------------------');
+    if (data !== null) {
+      return { status: 1, message: "Data found", data };
+    } else {
+      return { status: 0, message: "No data found" };
+    }
   } catch (error) {
     return { status: 0, message: "No data found" };
   }
