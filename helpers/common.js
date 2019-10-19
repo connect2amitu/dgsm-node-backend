@@ -55,10 +55,6 @@ common_helper.insertMany = async (Model, newData) => {
 };
 
 common_helper.update = async (model, condition, newData) => {
-  console.info('------------------------------------');
-  console.info(`newData => `, newData);
-  console.info('------------------------------------');
-
   try {
     let data = await model.findOneAndUpdate(condition, newData, { new: true });
     return { status: 1, message: "Data updated", data };
@@ -96,9 +92,6 @@ common_helper.find = async (model, condition = { isDeleted: 0 }) => {
 common_helper.findOne = async (model, condition = {}) => {
   try {
     let data = await model.findOne(condition).lean();
-    console.info('------------------------------------');
-    console.info(`data => `, data);
-    console.info('------------------------------------');
     if (data !== null) {
       return { status: 1, message: "Data found", data };
     } else {

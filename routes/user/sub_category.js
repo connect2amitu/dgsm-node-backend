@@ -8,9 +8,6 @@ const config = require("../../config");
 
 router.get("/", async (req, res) => {
   let responseData = await common_helper.find(SubCategory);
-  console.info('------------------------------------');
-  console.info(`responseData => `, responseData);
-  console.info('------------------------------------');
 
   if (responseData.status === 1) {
     res.status(config.OK_STATUS).json(responseData);
